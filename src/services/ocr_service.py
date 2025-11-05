@@ -22,10 +22,8 @@ class OCRService:
 
         try:
             self.ocr_engine = PaddleOCR(
-                use_angle_cls=True,  # 支持旋转图片
-                lang='ch',           # 中文+数字识别
-                use_gpu=False,       # CPU模式
-                show_log=False,      # 关闭调试日志
+                use_textline_orientation=True,  # 支持旋转图片 (替代use_angle_cls)
+                lang='ch',                       # 中文+数字识别
             )
             logger.info("ocr_engine_initialized", status="success")
         except Exception as e:

@@ -13,9 +13,9 @@ from src.api.schemas import (
 )
 from src.core.config import settings
 from src.core.logging import get_logger
+from src.core.uptime import get_uptime
 from src.services.ocr_service import get_ocr_service
 from src.utils.validators import validate_upload_file
-from main import get_uptime
 
 logger = get_logger(__name__)
 router = APIRouter()

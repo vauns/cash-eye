@@ -1,5 +1,4 @@
 """应用入口文件"""
-import time
 from contextlib import asynccontextmanager
 
 from fastapi import FastAPI
@@ -12,9 +11,6 @@ from src.api import routes
 # 配置日志
 configure_logging()
 logger = get_logger(__name__)
-
-# 服务启动时间
-START_TIME = time.time()
 
 
 @asynccontextmanager
@@ -64,8 +60,3 @@ async def root():
         "version": settings.SERVICE_VERSION,
         "status": "running"
     }
-
-
-def get_uptime() -> int:
-    """获取服务运行时长(秒)"""
-    return int(time.time() - START_TIME)

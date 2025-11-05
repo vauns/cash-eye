@@ -1,0 +1,31 @@
+version: '3.8'
+
+services:
+  money-ocr:
+    image: money-ocr-api:1.0.0
+    container_name: money-ocr
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "8000:8000"
+    environment:
+      - PORT=8000
+      - LOG_LEVEL=INFO
+      - MAX_FILE_SIZE_MB=10
+      - REQUEST_TIMEOUT_SEC=30
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/api/v1/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+    deploy:
+      resources:
+        limits:
+          cpus: '2.0'
+          memory: 2G
+        reservations:
+          cpus: '1.0'
+          memory: 1G

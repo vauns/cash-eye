@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="ee18abcd-b2ed-499f-ae4c-fcdaf5722a2f" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/.claude/commands/speckit.analyze.md" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.claude/commands/speckit.checklist.md" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.claude/commands/speckit.clarify.md" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.claude/commands/speckit.constitution.md" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.claude/commands/speckit.implement.md" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.claude/commands/speckit.plan.md" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.claude/commands/speckit.specify.md" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.claude/commands/speckit.tasks.md" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.dockerignore" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.env.example" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/MoneyOCR.iml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/inspectionProfiles/profiles_settings.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/modules.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.specify/memory/constitution.md" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.specify/scripts/powershell/check-prerequisites.ps1" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.specify/scripts/powershell/common.ps1" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.specify/scripts/powershell/create-new-feature.ps1" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.specify/scripts/powershell/setup-plan.ps1" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.specify/scripts/powershell/update-agent-context.ps1" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.specify/templates/agent-file-template.md" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.specify/templates/checklist-template.md" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.specify/templates/plan-template.md" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.specify/templates/spec-template.md" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.specify/templates/tasks-template.md" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/CLAUDE.md" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Dockerfile" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/IMPLEMENTATION.md" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/docker-compose.yml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/main.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/requirements-dev.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/requirements.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/specs/001-money-ocr-api/checklists/requirements.md" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/specs/001-money-ocr-api/contracts/openapi.yaml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/specs/001-money-ocr-api/data-model.md" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/specs/001-money-ocr-api/plan.md" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/specs/001-money-ocr-api/quickstart.md" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/specs/001-money-ocr-api/research.md" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/specs/001-money-ocr-api/spec.md" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/specs/001-money-ocr-api/tasks.md" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/__init__.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/api/__init__.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/api/routes.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/api/schemas.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/core/__init__.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/core/config.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/core/logging.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/services/__init__.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/services/image_processor.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/services/ocr_service.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/utils/__init__.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/utils/validators.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/tests/__init__.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/tests/conftest.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/tests/integration/__init__.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/tests/unit/__init__.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/tests/unit/test_image_processor.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/verify_install.py" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="ProjectColorInfo"><![CDATA[{
+  "associatedIndex": 6
+}]]></component>
+  <component name="ProjectId" id="353GEXd5UnbnsLPm1QEDjdYg6Av" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "ModuleVcsDetector.initialDetectionPerformed": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.git.unshallow": "true",
+    "git-widget-placeholder": "001-money-ocr-api",
+    "ignore.virus.scanning.warn.message": "true"
+  }
+}]]></component>
+  <component name="SharedIndexes">
+    <attachedChunks>
+      <set>
+        <option value="bundled-python-sdk-4e2b1448bda8-9a97661f3031-com.jetbrains.pycharm.pro.sharedIndexes.bundled-PY-252.27397.106" />
+      </set>
+    </attachedChunks>
+  </component>
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="ee18abcd-b2ed-499f-ae4c-fcdaf5722a2f" name="Changes" comment="" />
+      <created>1762331232876</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1762331232876</updated>
+    </task>
+    <servers />
+  </component>
+</project>

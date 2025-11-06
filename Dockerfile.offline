@@ -42,8 +42,15 @@ COPY src/ ./src/
 COPY main.py .
 
 # 【离线部署关键】复制预下载的模型文件到容器内
-# 模型会被放置在 PaddleOCR 默认的缓存目录
-COPY models/ /root/.paddleocr/
+# PaddleOCR 3.3.1+ 使用 .paddlex 作为缓存目录
+# 注意：models 目录应包含 PP-OCRv5_mobile_det 和 PP-OCRv5_mobile_rec
+#
+# 准备 models 目录的方法：
+# 方法1: 如果模型已在 ~/.paddlex/official_models/，使用复制脚本：
+#        python scripts/copy_models.py --target-dir ./models
+# 方法2: 首次下载（需要网络）：
+#        python scripts/download_models.py --model-dir ./models
+COPY models/ /root/.paddlex/official_models/
 
 # 确保Python能找到用户安装的包
 ENV PATH=/root/.local/bin:$PATH
@@ -56,7 +63,8 @@ ENV MAX_FILE_SIZE_MB=10
 
 # 【离线部署关键】禁用 PaddleOCR 自动下载模型
 # 设置此环境变量后，PaddleOCR 只会使用本地模型，不会尝试联网下载
-ENV HUB_HOME=/root/.paddleocr
+ENV PADDLE_HOME=/root/.paddlex
+ENV HUB_HOME=/root/.paddlex
 
 # 暴露端口
 EXPOSE 8000

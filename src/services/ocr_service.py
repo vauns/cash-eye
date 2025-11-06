@@ -1,6 +1,7 @@
 """OCR识别服务"""
 import re
 import time
+import signal
 from typing import Optional, Tuple, List
 import numpy as np
 from PIL import Image
@@ -9,6 +10,16 @@ from paddleocr import PaddleOCR
 from src.core.config import settings
 from src.core.logging import get_logger
 from src.services.image_processor import preprocess_image
+
+
+class TimeoutException(Exception):
+    """超时异常"""
+    pass
+
+
+def timeout_handler(signum, frame):
+    """超时处理函数"""
+    raise TimeoutException("OCR处理超时")
 
 logger = get_logger(__name__)
 
@@ -51,6 +62,13 @@ class OCRService:
         warnings = []
 
         try:
+            # 设置超时(仅在Unix系统上有效,Windows上signal.alarm不可用)
+            timeout_set = False
+            if hasattr(signal, 'SIGALRM'):
+                signal.signal(signal.SIGALRM, timeout_handler)
+                signal.alarm(settings.OCR_TIMEOUT_SEC)
+                timeout_set = True
+
             # 1. 图片预处理
             img = preprocess_image(image_bytes)
 
@@ -60,6 +78,10 @@ class OCRService:
             # 3. OCR识别
             logger.debug("ocr_recognizing", filename=filename)
             result = self.ocr_engine.ocr(img_array, cls=True)
+
+            # 取消超时
+            if timeout_set:
+                signal.alarm(0)
 
             # 4. 提取文本和置信度
             if not result or not result[0]:
@@ -108,7 +130,21 @@ class OCRService:
 
             return amount, avg_confidence, processing_time, raw_text, warnings
 
+        except TimeoutException as e:
+            processing_time = int((time.time() - start_time) * 1000)
+            logger.error(
+                "ocr_timeout",
+                filename=filename,
+                processing_time_ms=processing_time,
+                timeout_sec=settings.OCR_TIMEOUT_SEC
+            )
+            raise TimeoutException(f"图片处理超时(>{settings.OCR_TIMEOUT_SEC}秒)")
+
         except Exception as e:
+            # 确保取消超时
+            if timeout_set and hasattr(signal, 'SIGALRM'):
+                signal.alarm(0)
+
             processing_time = int((time.time() - start_time) * 1000)
             logger.error(
                 "ocr_failed",

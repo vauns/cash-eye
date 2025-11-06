@@ -14,7 +14,7 @@ from src.api.schemas import (
 from src.core.config import settings
 from src.core.logging import get_logger
 from src.core.uptime import get_uptime
-from src.services.ocr_service import get_ocr_service
+from src.services.ocr_service import get_ocr_service, TimeoutException
 from src.utils.validators import validate_upload_file
 
 logger = get_logger(__name__)
@@ -60,6 +60,16 @@ async def recognize(file: UploadFile = File(...)):
 
     except HTTPException:
         raise
+    except TimeoutException as e:
+        logger.error("ocr_timeout", filename=file.filename, error=str(e))
+        raise HTTPException(
+            status_code=status.HTTP_504_GATEWAY_TIMEOUT,
+            detail={
+                "code": "TIMEOUT",
+                "message": str(e),
+                "details": f"处理时间超过{settings.OCR_TIMEOUT_SEC}秒限制"
+            }
+        )
     except ValueError as e:
         logger.error("invalid_image", filename=file.filename, error=str(e))
         raise HTTPException(

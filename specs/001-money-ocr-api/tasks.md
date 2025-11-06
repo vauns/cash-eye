@@ -30,19 +30,19 @@
 
 ### 任务清单
 
-- [ ] T001 创建项目根目录结构(src/, tests/, docs/)
-- [ ] T002 创建requirements.txt,添加fastapi, paddleocr==3.3.1, pillow, uvicorn, structlog, pydantic
-- [ ] T003 创建requirements-dev.txt,添加pytest, pytest-asyncio, httpx, black, flake8
-- [ ] T004 创建.gitignore,排除__pycache__/, .pytest_cache/, .env, *.pyc
-- [ ] T005 创建README.md,包含项目简介、快速开始、API文档链接
-- [ ] T006 [P] 创建src/__init__.py(空文件)
-- [ ] T007 [P] 创建src/api/__init__.py(空文件)
-- [ ] T008 [P] 创建src/core/__init__.py(空文件)
-- [ ] T009 [P] 创建src/services/__init__.py(空文件)
-- [ ] T010 [P] 创建src/utils/__init__.py(空文件)
-- [ ] T011 [P] 创建tests/unit/__init__.py(空文件)
-- [ ] T012 [P] 创建tests/integration/__init__.py(空文件)
-- [ ] T013 [P] 创建tests/fixtures/sample_images/目录,准备3张测试金额图片
+- [X] T001 创建项目根目录结构(src/, tests/, docs/)
+- [X] T002 创建requirements.txt,添加fastapi, paddleocr==3.3.1, pillow, uvicorn, structlog, pydantic
+- [X] T003 创建requirements-dev.txt,添加pytest, pytest-asyncio, httpx, black, flake8
+- [X] T004 创建.gitignore,排除__pycache__/, .pytest_cache/, .env, *.pyc
+- [X] T005 创建README.md,包含项目简介、快速开始、API文档链接
+- [X] T006 [P] 创建src/__init__.py(空文件)
+- [X] T007 [P] 创建src/api/__init__.py(空文件)
+- [X] T008 [P] 创建src/core/__init__.py(空文件)
+- [X] T009 [P] 创建src/services/__init__.py(空文件)
+- [X] T010 [P] 创建src/utils/__init__.py(空文件)
+- [X] T011 [P] 创建tests/unit/__init__.py(空文件)
+- [X] T012 [P] 创建tests/integration/__init__.py(空文件)
+- [X] T013 [P] 创建tests/fixtures/sample_images/目录,准备3张测试金额图片
 
 **完成标准**: 项目结构创建完成,依赖文件定义清晰
 
@@ -54,11 +54,11 @@
 
 ### 任务清单
 
-- [ ] T014 实现src/core/config.py,使用Pydantic BaseSettings管理环境变量(PORT, LOG_LEVEL, MAX_FILE_SIZE_MB)
-- [ ] T015 实现src/core/logging.py,配置structlog JSON格式日志,包含timestamp, level, event字段
-- [ ] T016 [P] 定义src/api/schemas.py中的ErrorResponse和ErrorDetail数据模型
-- [ ] T017 [P] 实现src/utils/validators.py,包含validate_image_format()和validate_file_size()函数
-- [ ] T018 创建main.py应用入口,初始化FastAPI app,配置CORS,挂载日志中间件
+- [X] T014 实现src/core/config.py,使用Pydantic BaseSettings管理环境变量(PORT, LOG_LEVEL, MAX_FILE_SIZE_MB)
+- [X] T015 实现src/core/logging.py,配置structlog JSON格式日志,包含timestamp, level, event字段
+- [X] T016 [P] 定义src/api/schemas.py中的ErrorResponse和ErrorDetail数据模型
+- [X] T017 [P] 实现src/utils/validators.py,包含validate_image_format()和validate_file_size()函数
+- [X] T018 创建main.py应用入口,初始化FastAPI app,配置CORS,挂载日志中间件
 
 **完成标准**:
 - 配置管理可读取环境变量
@@ -80,18 +80,18 @@ curl -X POST http://localhost:8000/api/v1/recognize \
 
 ### 任务清单
 
-- [ ] T019 [US1] 定义src/api/schemas.py中的RecognitionResponse和RecognitionResult数据模型
-- [ ] T020 [P] [US1] 实现src/services/image_processor.py的preprocess_image()函数,支持格式转换、尺寸压缩(<2048px)
-- [ ] T021 [US1] 实现src/services/ocr_service.py的OCRService类,初始化PaddleOCR引擎(use_gpu=False, lang='ch')
-- [ ] T022 [US1] 在OCRService中实现recognize_amount()方法,调用PaddleOCR识别并提取文本
-- [ ] T023 [US1] 实现src/services/ocr_service.py中的extract_amount_from_text()函数,使用正则表达式提取纯数字金额
-- [ ] T024 [US1] 在extract_amount_from_text()中实现货币符号(¥/$)和千分位分隔符(,)的去除逻辑
-- [ ] T025 [US1] 在recognize_amount()中实现置信度检查,<0.8时添加warnings字段
-- [ ] T026 [US1] 实现src/api/routes.py的POST /api/v1/recognize端点,接收UploadFile参数
-- [ ] T027 [US1] 在recognize端点中添加文件大小验证(≤10MB)和格式验证(JPEG/PNG/BMP/TIFF)
-- [ ] T028 [US1] 在recognize端点中集成image_processor和ocr_service,返回RecognitionResponse
-- [ ] T029 [US1] 实现recognize端点的异常处理,映射到对应错误码(FILE_TOO_LARGE, UNSUPPORTED_FORMAT, INVALID_IMAGE, OCR_ENGINE_ERROR)
-- [ ] T030 [US1] 在main.py中注册/api/v1路由,挂载routes.router
+- [X] T019 [US1] 定义src/api/schemas.py中的RecognitionResponse和RecognitionResult数据模型
+- [X] T020 [P] [US1] 实现src/services/image_processor.py的preprocess_image()函数,支持格式转换、尺寸压缩(<2048px)
+- [X] T021 [US1] 实现src/services/ocr_service.py的OCRService类,初始化PaddleOCR引擎(use_gpu=False, lang='ch')
+- [X] T022 [US1] 在OCRService中实现recognize_amount()方法,调用PaddleOCR识别并提取文本
+- [X] T023 [US1] 实现src/services/ocr_service.py中的extract_amount_from_text()函数,使用正则表达式提取纯数字金额
+- [X] T024 [US1] 在extract_amount_from_text()中实现货币符号(¥/$)和千分位分隔符(,)的去除逻辑
+- [X] T025 [US1] 在recognize_amount()中实现置信度检查,<0.8时添加warnings字段
+- [X] T026 [US1] 实现src/api/routes.py的POST /api/v1/recognize端点,接收UploadFile参数
+- [X] T027 [US1] 在recognize端点中添加文件大小验证(≤10MB)和格式验证(JPEG/PNG/BMP/TIFF)
+- [X] T028 [US1] 在recognize端点中集成image_processor和ocr_service,返回RecognitionResponse
+- [X] T029 [US1] 实现recognize端点的异常处理,映射到对应错误码(FILE_TOO_LARGE, UNSUPPORTED_FORMAT, INVALID_IMAGE, OCR_ENGINE_ERROR)
+- [X] T030 [US1] 在main.py中注册/api/v1路由,挂载routes.router
 
 **验收标准**:
 - ✅ 上传清晰金额图片返回正确识别结果
@@ -114,10 +114,10 @@ curl http://localhost:8000/api/v1/health
 
 ### 任务清单
 
-- [ ] T031 [US3] 定义src/api/schemas.py中的HealthCheckResponse数据模型
-- [ ] T032 [US3] 实现src/api/routes.py的GET /api/v1/health端点,返回服务状态、版本号、OCR引擎信息
-- [ ] T033 [US3] 在health端点中添加OCR引擎可用性检查,异常时返回status=unhealthy
-- [ ] T034 [US3] 在health端点中添加服务运行时长(uptime_seconds)计算逻辑
+- [X] T031 [US3] 定义src/api/schemas.py中的HealthCheckResponse数据模型
+- [X] T032 [US3] 实现src/api/routes.py的GET /api/v1/health端点,返回服务状态、版本号、OCR引擎信息
+- [X] T033 [US3] 在health端点中添加OCR引擎可用性检查,异常时返回status=unhealthy
+- [X] T034 [US3] 在health端点中添加服务运行时长(uptime_seconds)计算逻辑
 
 **验收标准**:
 - ✅ 服务正常运行时返回status=healthy
@@ -139,11 +139,11 @@ curl -X POST http://localhost:8000/api/v1/recognize/batch \
 
 ### 任务清单
 
-- [ ] T035 [US2] 定义src/api/schemas.py中的BatchRecognitionResponse, BatchRecognitionResult, BatchItemResult数据模型
-- [ ] T036 [US2] 实现src/api/routes.py的POST /api/v1/recognize/batch端点,接收List[UploadFile]参数
-- [ ] T037 [US2] 在batch端点中循环处理每张图片,调用OCRService.recognize_amount()
-- [ ] T038 [US2] 在batch端点中实现部分失败处理,单张失败不影响其他图片,记录error字段
-- [ ] T039 [US2] 在batch端点中汇总total/succeeded/failed统计信息,返回BatchRecognitionResponse
+- [X] T035 [US2] 定义src/api/schemas.py中的BatchRecognitionResponse, BatchRecognitionResult, BatchItemResult数据模型
+- [X] T036 [US2] 实现src/api/routes.py的POST /api/v1/recognize/batch端点,接收List[UploadFile]参数
+- [X] T037 [US2] 在batch端点中循环处理每张图片,调用OCRService.recognize_amount()
+- [X] T038 [US2] 在batch端点中实现部分失败处理,单张失败不影响其他图片,记录error字段
+- [X] T039 [US2] 在batch端点中汇总total/succeeded/failed统计信息,返回BatchRecognitionResponse
 
 **验收标准**:
 - ✅ 批量上传3张图片返回3个结果
@@ -166,15 +166,15 @@ curl http://localhost:8000/api/v1/health
 
 ### 任务清单
 
-- [ ] T040 [US4] 创建Dockerfile,使用python:3.9-slim基础镜像,多阶段构建
-- [ ] T041 [US4] 在Dockerfile中COPY requirements.txt并RUN pip install
-- [ ] T042 [US4] 在Dockerfile中安装PaddleOCR依赖的系统库(libgomp1, libglib2.0-0, libsm6, libxext6, libxrender-dev)
-- [ ] T043 [US4] 在Dockerfile中COPY源代码(src/, main.py)到容器
-- [ ] T044 [US4] 在Dockerfile中设置ENV变量(PORT=8000, LOG_LEVEL=INFO)
-- [ ] T045 [US4] 在Dockerfile中设置CMD启动命令: uvicorn main:app --host 0.0.0.0 --port ${PORT}
-- [ ] T046 [P] [US4] 创建docker-compose.yml,定义money-ocr服务,映射端口8000,设置环境变量
-- [ ] T047 [P] [US4] 在docker-compose.yml中添加healthcheck配置,每30秒检查/api/v1/health端点
-- [ ] T048 [P] [US4] 创建.dockerignore,排除tests/, .git/, __pycache__/, *.md
+- [X] T040 [US4] 创建Dockerfile,使用python:3.9-slim基础镜像,多阶段构建
+- [X] T041 [US4] 在Dockerfile中COPY requirements.txt并RUN pip install
+- [X] T042 [US4] 在Dockerfile中安装PaddleOCR依赖的系统库(libgomp1, libglib2.0-0, libsm6, libxext6, libxrender-dev)
+- [X] T043 [US4] 在Dockerfile中COPY源代码(src/, main.py)到容器
+- [X] T044 [US4] 在Dockerfile中设置ENV变量(PORT=8000, LOG_LEVEL=INFO)
+- [X] T045 [US4] 在Dockerfile中设置CMD启动命令: uvicorn main:app --host 0.0.0.0 --port ${PORT}
+- [X] T046 [P] [US4] 创建docker-compose.yml,定义money-ocr服务,映射端口8000,设置环境变量
+- [X] T047 [P] [US4] 在docker-compose.yml中添加healthcheck配置,每30秒检查/api/v1/health端点
+- [X] T048 [P] [US4] 创建.dockerignore,排除tests/, .git/, __pycache__/, *.md
 
 **验收标准**:
 - ✅ docker build成功,镜像大小<500MB
@@ -191,13 +191,13 @@ curl http://localhost:8000/api/v1/health
 
 ### 任务清单
 
-- [ ] T049 在README.md中添加详细的快速开始指南,包含Docker启动命令和API使用示例
-- [ ] T050 在main.py中配置FastAPI自动生成OpenAPI文档,访问路径/docs和/redoc
-- [ ] T051 在OCRService.__init__()中添加模型预加载逻辑,避免首次请求慢
-- [ ] T052 在recognize端点中添加请求日志,记录image_format, image_size_kb, processing_time_ms, confidence, amount
-- [ ] T053 在recognize端点中添加处理超时限制(3秒),超时返回504 TIMEOUT错误
-- [ ] T054 [P] 创建.github/workflows/docker-build.yml CI配置,自动构建和推送Docker镜像
-- [ ] T055 [P] 在README.md中添加性能优化建议章节,说明图片预处理和并发控制最佳实践
+- [X] T049 在README.md中添加详细的快速开始指南,包含Docker启动命令和API使用示例
+- [X] T050 在main.py中配置FastAPI自动生成OpenAPI文档,访问路径/docs和/redoc
+- [X] T051 在OCRService.__init__()中添加模型预加载逻辑,避免首次请求慢
+- [X] T052 在recognize端点中添加请求日志,记录image_format, image_size_kb, processing_time_ms, confidence, amount
+- [X] T053 在recognize端点中添加处理超时限制(3秒),超时返回504 TIMEOUT错误
+- [ ] T054 [P] 创建.github/workflows/docker-build.yml CI配置,自动构建和推送Docker镜像(可选)
+- [X] T055 [P] 在README.md中添加性能优化建议章节,说明图片预处理和并发控制最佳实践
 
 **完成标准**:
 - 文档完整,业务团队可在10分钟内完成部署

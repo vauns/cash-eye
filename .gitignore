@@ -17,3 +17,10 @@ ENV/
 .vscode/
 *.log
 .DS_Store
+Thumbs.db
+*.tmp
+*.swp
+.venv310/
+*.prof*
+.coverage
+htmlcov/

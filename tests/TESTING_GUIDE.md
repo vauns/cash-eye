@@ -94,7 +94,7 @@ pytest tests/integration/test_api.py -v
 # 1. 安装依赖
 pip install -r requirements.txt
 pip install -r requirements-dev.txt
-pip install paddlepaddle  # 如未自动安装
+pip install paddleocr  # 如未自动安装
 
 # 2. 生成测试图片
 cd tests/fixtures
@@ -159,7 +159,7 @@ pytest tests/unit/test_image_processor.py -v
 ### 问题：ImportError: No module named 'paddle'
 **解决：**
 ```bash
-pip install paddlepaddle
+pip install paddleocr
 ```
 
 ### 问题：ValueError: Unknown argument: use_gpu

@@ -5,9 +5,7 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="ee18abcd-b2ed-499f-ae4c-fcdaf5722a2f" name="Changes" comment="feat: Implement CPU detection and adaptive threading for OCR service">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/services/ocr_service.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/services/ocr_service.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/test_cpu_detection.py" beforeDir="false" afterPath="$PROJECT_DIR$/test_cpu_detection.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -198,7 +196,15 @@
       <option name="project" value="LOCAL" />
       <updated>1762406880490</updated>
     </task>
-    <option name="localTasksCounter" value="4" />
+    <task id="LOCAL-00004" summary="feat: Implement CPU detection and adaptive threading for OCR service">
+      <option name="closed" value="true" />
+      <created>1762409425505</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1762409425505</updated>
+    </task>
+    <option name="localTasksCounter" value="5" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">

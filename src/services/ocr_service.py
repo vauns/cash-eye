@@ -106,28 +106,15 @@ class OCRService:
                 timeout_set = True
 
             # 1. 图片预处理
-            preprocess_start = time.time()
             img = preprocess_image(image_bytes)
-            preprocess_time = int((time.time() - preprocess_start) * 1000)
-            logger.debug("step_preprocess", time_ms=preprocess_time, size=img.size)
 
             # 2. 转换为numpy数组供PaddleOCR使用
-            array_start = time.time()
             img_array = np.array(img)
-            array_time = int((time.time() - array_start) * 1000)
-            logger.debug("step_to_array", time_ms=array_time, shape=img_array.shape)
 
             # 3. 文本检测
             det_start = time.time()
-            logger.debug("text_detecting", filename=filename)
             det_result = self.text_detector.predict(input=img_array)
             det_time = int((time.time() - det_start) * 1000)
-            logger.debug("step_detection", time_ms=det_time)
-
-            # 调试：查看检测结果格式
-            logger.debug("det_result_type", result_type=str(type(det_result)))
-            if hasattr(det_result, '__len__'):
-                logger.debug("det_result_len", length=len(det_result))
 
             # 4. 提取检测框并裁剪图片
             crop_start = time.time()
@@ -139,7 +126,6 @@ class OCRService:
                 # 从字典中获取dt_polys（检测到的多边形坐标）
                 if isinstance(first_det, dict) and 'dt_polys' in first_det:
                     dt_polys = first_det['dt_polys']
-                    logger.debug("processing_polys", num_polys=len(dt_polys))
 
                     # 对每个检测到的文本框
                     for idx, poly in enumerate(dt_polys):
@@ -151,9 +137,7 @@ class OCRService:
                         x_max = int(poly_array[:, 0].max())
                         y_max = int(poly_array[:, 1].max())
 
-                        logger.debug(f"poly_{idx}_bbox", x_min=x_min, y_min=y_min, x_max=x_max, y_max=y_max)
-
-                        # 添加padding（可选，避免裁剪太紧）
+                        # 添加padding（避免裁剪太紧）
                         padding = 2
                         x_min = max(0, x_min - padding)
                         y_min = max(0, y_min - padding)
@@ -165,28 +149,27 @@ class OCRService:
                         cropped_array = np.array(cropped)
                         cropped_images.append(cropped_array)
 
-                        logger.debug(f"cropped_{idx}", size=(x_max-x_min, y_max-y_min), shape=cropped_array.shape)
-
             crop_time = int((time.time() - crop_start) * 1000)
-            logger.debug("step_crop", time_ms=crop_time, num_crops=len(cropped_images))
 
-            # 5. 文本识别（识别裁剪后的图片）
+            # 4. 文本识别（识别裁剪后的图片）
             rec_start = time.time()
 
             if len(cropped_images) > 0:
-                logger.debug("text_recognizing", filename=filename, mode="cropped_images", num_images=len(cropped_images))
                 # 批量识别裁剪后的图片
                 rec_result = self.text_recognizer.predict(input=cropped_images, batch_size=len(cropped_images))
             else:
                 # 如果没有检测到文本框，回退到识别整张图
-                logger.warning("no_text_boxes_detected", filename=filename, fallback="full_image")
+                logger.warning("no_text_boxes_detected", filename=filename)
                 rec_result = self.text_recognizer.predict(input=img_array, batch_size=1)
 
             rec_time = int((time.time() - rec_start) * 1000)
-            logger.debug("step_recognition", time_ms=rec_time)
 
-            total_time = det_time + rec_time
-            logger.debug("total_det_rec_time", time_ms=total_time)
+            # 性能日志
+            logger.debug("ocr_performance",
+                        detection_ms=det_time,
+                        crop_ms=crop_time,
+                        recognition_ms=rec_time,
+                        num_crops=len(cropped_images))
 
             # 取消超时
             if timeout_set:
@@ -196,35 +179,21 @@ class OCRService:
             texts = []
             confidences = []
 
-            # TextRecognition 3.3.1 返回格式解析
-            logger.debug("rec_result_type", result_type=str(type(rec_result)), result_len=len(rec_result) if hasattr(rec_result, '__len__') else 'N/A')
-
-            # 详细日志：打印结果内容以便调试
-            if isinstance(rec_result, list) and len(rec_result) > 0:
-                logger.debug("rec_result_sample", first_item_type=str(type(rec_result[0])), first_item=str(rec_result[0])[:200])
-
             # 尝试解析结果
             if rec_result is None or (isinstance(rec_result, list) and len(rec_result) == 0):
                 processing_time = int((time.time() - start_time) * 1000)
-                logger.warning(
-                    "no_text_detected",
-                    filename=filename,
-                    processing_time_ms=processing_time
-                )
+                logger.warning("no_text_detected", filename=filename, processing_time_ms=processing_time)
                 return None, 0.0, processing_time, None, ["未检测到任何文本"]
 
             try:
                 # 尝试迭代结果对象
-                for idx, res in enumerate(rec_result):
-                    logger.debug(f"parsing_rec_item_{idx}", res_type=str(type(res)), has_text=hasattr(res, 'text'), has_score=hasattr(res, 'score'))
-
+                for res in rec_result:
                     # 检查是否有text和score属性
                     if hasattr(res, 'text') and hasattr(res, 'score'):
                         texts.append(str(res.text))
                         confidences.append(float(res.score))
                     # 或者是字典格式
                     elif isinstance(res, dict):
-                        logger.debug(f"dict_keys_{idx}", keys=list(res.keys()))
                         # PaddleOCR 3.3.1 TextRecognition 返回格式
                         if 'rec_text' in res and 'rec_score' in res:
                             texts.append(str(res['rec_text']))
@@ -238,12 +207,10 @@ class OCRService:
                         texts.append(str(res[0]))
                         confidences.append(float(res[1]))
                     else:
-                        logger.warning("unexpected_rec_result_format", res_type=str(type(res)), res_str=str(res)[:100])
-
-                logger.debug("parsed_recognition_results", num_texts=len(texts), texts=texts[:3])
+                        logger.warning("unexpected_rec_result_format", res_type=str(type(res)))
 
             except Exception as e:
-                logger.error("error_parsing_rec_result", error=str(e), result_type=str(type(rec_result)))
+                logger.error("error_parsing_rec_result", error=str(e))
 
             raw_text = " ".join(texts)
             avg_confidence = sum(confidences) / len(confidences) if confidences else 0.0
@@ -264,11 +231,6 @@ class OCRService:
             # 6. 置信度检查
             if avg_confidence < 0.8:
                 warnings.append("置信度较低,建议人工复核")
-                logger.warning(
-                    "low_confidence_detected",
-                    filename=filename,
-                    confidence=avg_confidence
-                )
 
             processing_time = int((time.time() - start_time) * 1000)
 
@@ -276,7 +238,7 @@ class OCRService:
                 "ocr_completed",
                 filename=filename,
                 amount=amount,
-                confidence=avg_confidence,
+                confidence=f"{avg_confidence:.3f}",
                 processing_time_ms=processing_time,
                 raw_text=raw_text
             )

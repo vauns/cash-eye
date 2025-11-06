@@ -5,16 +5,10 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="ee18abcd-b2ed-499f-ae4c-fcdaf5722a2f" name="Changes" comment="init">
-      <change afterPath="$PROJECT_DIR$/tests/fixtures/sample_images/test.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/MoneyOCR.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/MoneyOCR.iml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/requirements.txt" beforeDir="false" afterPath="$PROJECT_DIR$/requirements.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/specs/001-money-ocr-api/tasks.md" beforeDir="false" afterPath="$PROJECT_DIR$/specs/001-money-ocr-api/tasks.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/api/routes.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/api/routes.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/services/ocr_service.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/services/ocr_service.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests/TESTING_GUIDE.md" beforeDir="false" afterPath="$PROJECT_DIR$/tests/TESTING_GUIDE.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/fixtures/generate_test_images.py" beforeDir="false" afterPath="$PROJECT_DIR$/tests/fixtures/generate_test_images.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/tests/fixtures/images/amount_0_01.jpg" beforeDir="false" afterPath="$PROJECT_DIR$/tests/fixtures/images/amount_0_01.jpg" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/tests/fixtures/images/amount_100.jpg" beforeDir="false" afterPath="$PROJECT_DIR$/tests/fixtures/images/amount_100.jpg" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/tests/fixtures/images/amount_1234.jpg" beforeDir="false" afterPath="$PROJECT_DIR$/tests/fixtures/images/amount_1234.jpg" afterDir="false" />
@@ -26,6 +20,8 @@
       <change beforePath="$PROJECT_DIR$/tests/fixtures/images/amount_dollar_99.jpg" beforeDir="false" afterPath="$PROJECT_DIR$/tests/fixtures/images/amount_dollar_99.jpg" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/tests/fixtures/images/amount_large.jpg" beforeDir="false" afterPath="$PROJECT_DIR$/tests/fixtures/images/amount_large.jpg" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/tests/fixtures/images/amount_yuan_888.jpg" beforeDir="false" afterPath="$PROJECT_DIR$/tests/fixtures/images/amount_yuan_888.jpg" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/integration/test_api.py" beforeDir="false" afterPath="$PROJECT_DIR$/tests/integration/test_api.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/unit/test_ocr_service.py" beforeDir="false" afterPath="$PROJECT_DIR$/tests/unit/test_ocr_service.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -33,6 +29,11 @@
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
   <component name="Git.Settings">
+    <option name="RECENT_BRANCH_BY_REPOSITORY">
+      <map>
+        <entry key="$PROJECT_DIR$" value="claude/fix-paddle-import-error-011CUqkovjUHMqHeG7u2mupr" />
+      </map>
+    </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
   <component name="ProjectColorInfo">{
@@ -43,27 +44,28 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "ModuleVcsDetector.initialDetectionPerformed": "true",
-    "Python.main.executor": "Run",
-    "Python.test_ocr_service.executor": "Run",
-    "Python.verify_install.executor": "Run",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252": "true",
-    "RunOnceActivity.git.unshallow": "true",
-    "git-widget-placeholder": "001-money-ocr-api",
-    "ignore.virus.scanning.warn.message": "true",
-    "last_opened_file_path": "D:/PycharmProjects/MoneyOCR",
-    "settings.editor.selected.configurable": "configurable.group.python.group.settings"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;ModuleVcsDetector.initialDetectionPerformed&quot;: &quot;true&quot;,
+    &quot;Python tests.Python tests in test_ocr_service.py.executor&quot;: &quot;Run&quot;,
+    &quot;Python.main.executor&quot;: &quot;Run&quot;,
+    &quot;Python.test_ocr_service.executor&quot;: &quot;Run&quot;,
+    &quot;Python.verify_install.executor&quot;: &quot;Run&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;001-money-ocr-api&quot;,
+    &quot;ignore.virus.scanning.warn.message&quot;: &quot;true&quot;,
+    &quot;last_opened_file_path&quot;: &quot;D:/PycharmProjects/MoneyOCR&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.pluginManager&quot;
   }
-}]]></component>
+}</component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
       <recent name="D:\PycharmProjects\MoneyOCR\tests\fixtures\sample_images" />
     </key>
   </component>
-  <component name="RunManager" selected="Python.verify_install">
+  <component name="RunManager" selected="Python tests.Python tests in test_ocr_service.py">
     <configuration name="main" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
       <module name="MoneyOCR" />
       <option name="ENV_FILES" value="" />
@@ -130,8 +132,24 @@
       <option name="INPUT_FILE" value="" />
       <method v="2" />
     </configuration>
+    <configuration name="Python tests in test_ocr_service.py" type="tests" factoryName="Autodetect" temporary="true" nameIsGenerated="true">
+      <module name="MoneyOCR" />
+      <option name="ENV_FILES" value="" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <option name="_new_additionalArguments" value="&quot;&quot;" />
+      <option name="_new_target" value="&quot;$PROJECT_DIR$/tests/unit/test_ocr_service.py&quot;" />
+      <option name="_new_targetType" value="&quot;PATH&quot;" />
+      <method v="2" />
+    </configuration>
     <recent_temporary>
       <list>
+        <item itemvalue="Python tests.Python tests in test_ocr_service.py" />
         <item itemvalue="Python.verify_install" />
         <item itemvalue="Python.test_ocr_service" />
         <item itemvalue="Python.main" />

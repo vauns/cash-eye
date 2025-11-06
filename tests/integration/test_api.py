@@ -120,7 +120,8 @@ def test_recognize_endpoint_invalid_format(client, fixtures_dir):
     # Should reject unsupported format
     assert response.status_code == 400
     data = response.json()
-    assert "error" in data
+    # FastAPI returns error in 'detail' field
+    assert "detail" in data
 
 
 def test_recognize_endpoint_various_amounts(client, fixtures_dir):

@@ -32,11 +32,27 @@ class OCRService:
         logger.info("ocr_engine_initializing", engine="PaddleOCR", version="3.3.1")
 
         try:
+            # PaddleOCR 3.3.1 配置
+            # 混合模型策略：检测用 Mobile（快），识别用 Server（准）
+            # 平衡性能和精度，能正确识别货币符号"¥"
             self.ocr_engine = PaddleOCR(
-                use_textline_orientation=True,  # 支持旋转图片 (替代use_angle_cls)
-                lang='ch',                       # 中文+数字识别
+                # 混合模型：检测快速，识别精准
+                text_detection_model_name='PP-OCRv5_mobile_det',     # 轻量级检测（~100ms）
+                text_recognition_model_name='PP-OCRv5_server_rec',   # 高精度识别（~400ms）
+
+                # 禁用所有方向相关模块（节省时间）
+                use_textline_orientation=False,
+                use_doc_orientation_classify=False,
+                use_doc_unwarping=False,
+
+                # 识别批处理
+                text_recognition_batch_size=1,
+
+                # CPU 优化
+                enable_mkldnn=True,                     # Intel MKL-DNN 加速
+                cpu_threads=10,                         # 多线程优化（利用 6P+8E）
             )
-            logger.info("ocr_engine_initialized", status="success")
+            logger.info("ocr_engine_initialized", status="success", mode="full_pipeline", model="mobile_det+server_rec")
         except Exception as e:
             logger.error("ocr_engine_init_failed", error=str(e))
             raise
@@ -70,21 +86,30 @@ class OCRService:
                 timeout_set = True
 
             # 1. 图片预处理
+            preprocess_start = time.time()
             img = preprocess_image(image_bytes)
+            preprocess_time = int((time.time() - preprocess_start) * 1000)
+            logger.debug("step_preprocess", time_ms=preprocess_time, size=img.size)
 
             # 2. 转换为numpy数组供PaddleOCR使用
+            array_start = time.time()
             img_array = np.array(img)
+            array_time = int((time.time() - array_start) * 1000)
+            logger.debug("step_to_array", time_ms=array_time, shape=img_array.shape)
 
-            # 3. OCR识别
-            logger.debug("ocr_recognizing", filename=filename)
-            result = self.ocr_engine.ocr(img_array, cls=True)
+            # 3. OCR识别（仅识别模式，因为未加载检测模型）
+            ocr_start = time.time()
+            logger.debug("ocr_recognizing", filename=filename, mode="rec_only")
+            result = self.ocr_engine.ocr(img_array)
+            ocr_time = int((time.time() - ocr_start) * 1000)
+            logger.debug("step_ocr", time_ms=ocr_time)
 
             # 取消超时
             if timeout_set:
                 signal.alarm(0)
 
             # 4. 提取文本和置信度
-            if not result or not result[0]:
+            if not result:
                 processing_time = int((time.time() - start_time) * 1000)
                 logger.warning(
                     "ocr_no_text_detected",
@@ -93,17 +118,74 @@ class OCRService:
                 )
                 return None, 0.0, processing_time, None, ["未检测到任何文本"]
 
-            # 提取所有文本和置信度
+            # PaddleOCR 3.3.1 返回格式：[{字典}]
+            # 字典包含 'rec_texts' (识别文本列表) 和 'rec_scores' (置信度列表)
             texts = []
             confidences = []
-            for line in result[0]:
-                text = line[1][0]  # 识别的文本
-                confidence = line[1][1]  # 置信度
-                texts.append(text)
-                confidences.append(confidence)
+
+            if isinstance(result, dict):
+                # 直接返回字典格式
+                rec_texts = result.get('rec_texts', [])
+                rec_scores = result.get('rec_scores', [])
+
+                if rec_texts and rec_scores:
+                    texts = [str(t) for t in rec_texts]
+                    confidences = [float(s) for s in rec_scores]
+
+            elif isinstance(result, list) and len(result) > 0:
+                # 列表格式
+                first_item = result[0]
+
+                if isinstance(first_item, dict):
+                    # PaddleOCR 3.3.1: [{'rec_texts': [...], 'rec_scores': [...], ...}]
+                    rec_texts = first_item.get('rec_texts', [])
+                    rec_scores = first_item.get('rec_scores', [])
+
+                    if rec_texts and rec_scores:
+                        texts = [str(t) for t in rec_texts]
+                        confidences = [float(s) for s in rec_scores]
+                        logger.debug("ocr_dict_format_parsed",
+                                   num_texts=len(texts),
+                                   texts=texts[:3])  # 只记录前3个
+                    else:
+                        logger.warning("ocr_empty_dict_result",
+                                     filename=filename,
+                                     dict_keys=list(first_item.keys()))
+
+                elif isinstance(first_item, (list, tuple)):
+                    # 旧版 PaddleOCR: [[coords, (text, conf)], ...]
+                    for line in first_item:
+                        try:
+                            if isinstance(line, (list, tuple)) and len(line) >= 2:
+                                text_info = line[1]
+                                if isinstance(text_info, (list, tuple)) and len(text_info) >= 2:
+                                    text = str(text_info[0])
+                                    confidence = float(text_info[1])
+                                    texts.append(text)
+                                    confidences.append(confidence)
+                        except Exception as e:
+                            logger.error("error_parsing_line", error=str(e), line=str(line))
+                            continue
+
+                else:
+                    logger.warning("unexpected_first_item_type",
+                                 first_item_type=str(type(first_item)),
+                                 filename=filename)
 
             raw_text = " ".join(texts)
             avg_confidence = sum(confidences) / len(confidences) if confidences else 0.0
+
+            # 如果没有提取到任何文本
+            if not texts:
+                processing_time = int((time.time() - start_time) * 1000)
+                logger.warning(
+                    "ocr_no_text_extracted",
+                    filename=filename,
+                    processing_time_ms=processing_time,
+                    result_type=str(type(result)),
+                    result_len=len(result) if isinstance(result, list) else 0
+                )
+                return None, 0.0, processing_time, None, ["未检测到任何文本"]
 
             # 5. 提取金额
             amount = self._extract_amount_from_text(raw_text)
@@ -207,7 +289,7 @@ class OCRService:
             # 尝试识别一个小的测试图片
             test_img = Image.new('RGB', (100, 100), color='white')
             img_array = np.array(test_img)
-            self.ocr_engine.ocr(img_array, cls=False)
+            self.ocr_engine.ocr(img_array)
             return True
         except Exception as e:
             logger.error("ocr_health_check_failed", error=str(e))

@@ -1,6 +1,55 @@
 """Generate test images with amount text for testing OCR"""
 from PIL import Image, ImageDraw, ImageFont
 import os
+import platform
+
+
+def get_system_fonts():
+    """根据操作系统返回支持中文和符号的字体路径列表"""
+    system = platform.system()
+
+    if system == 'Windows':
+        return [
+            "C:/Windows/Fonts/msyh.ttc",     # 微软雅黑（推荐，最佳支持）
+            "C:/Windows/Fonts/simhei.ttf",   # 黑体
+            "C:/Windows/Fonts/simsun.ttc",   # 宋体
+            "C:/Windows/Fonts/arial.ttf",    # Arial
+        ]
+    elif system == 'Linux':
+        return [
+            "/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf",
+            "/usr/share/fonts/truetype/wqy/wqy-zenhei.ttc",
+            "/usr/share/fonts/opentype/noto/NotoSansCJK-Regular.ttc",
+            "/usr/share/fonts/truetype/liberation/LiberationSans-Bold.ttf",
+        ]
+    elif system == 'Darwin':  # macOS
+        return [
+            "/System/Library/Fonts/PingFang.ttc",
+            "/Library/Fonts/Arial Unicode.ttf",
+            "/System/Library/Fonts/Supplemental/Arial.ttf",
+        ]
+    else:
+        print(f"Warning: Unknown system '{system}', using default fonts")
+        return []
+
+
+def load_font(font_size):
+    """加载适合当前系统的字体"""
+    font_paths = get_system_fonts()
+    system = platform.system()
+
+    for font_path in font_paths:
+        try:
+            font = ImageFont.truetype(font_path, font_size)
+            print(f"✓ Using font: {font_path} (System: {system})")
+            return font
+        except Exception as e:
+            continue
+
+    # Fallback to default font
+    print(f"⚠ Warning: No system fonts found, using default font (may not support all characters)")
+    return ImageFont.load_default()
+
 
 def create_amount_image(text, filename, size=(400, 200), font_size=60):
     """Create a simple image with amount text"""
@@ -8,13 +57,8 @@ def create_amount_image(text, filename, size=(400, 200), font_size=60):
     img = Image.new('RGB', size, color='white')
     draw = ImageDraw.Draw(img)
 
-    # Try to use a default font, fall back to basic if not available
-    try:
-        # Use a larger font size for better OCR
-        font = ImageFont.truetype("/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf", font_size)
-    except:
-        # Fallback to default font
-        font = ImageFont.load_default()
+    # Load system-appropriate font
+    font = load_font(font_size)
 
     # Get text size and center it
     bbox = draw.textbbox((0, 0), text, font=font)
@@ -50,10 +94,8 @@ def main():
     # Create a blurry/low quality image
     img = Image.new('RGB', (400, 200), color='white')
     draw = ImageDraw.Draw(img)
-    try:
-        font = ImageFont.truetype("/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf", 40)
-    except:
-        font = ImageFont.load_default()
+
+    font = load_font(40)
     draw.text((100, 80), '¥123.45', fill='gray', font=font)
 
     # Make it blurry by resizing down and up
@@ -73,10 +115,8 @@ def main():
     # Create different formats
     img = Image.new('RGB', (400, 200), color='white')
     draw = ImageDraw.Draw(img)
-    try:
-        font = ImageFont.truetype("/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf", 60)
-    except:
-        font = ImageFont.load_default()
+
+    font = load_font(60)
     draw.text((100, 70), '¥200.00', fill='black', font=font)
 
     # PNG format

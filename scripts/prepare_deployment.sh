@@ -1,17 +1,17 @@
 #!/bin/bash
-# 离线部署准备脚本
+# 部署准备脚本
 #
-# 此脚本用于在有网络的环境中准备离线部署所需的模型文件
+# 此脚本用于在有网络的环境中准备部署所需的模型文件
 
 set -e
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 PROJECT_ROOT="$(dirname "$SCRIPT_DIR")"
 MODEL_DIR="${PROJECT_ROOT}/models"
-PACKAGE_NAME="paddleocr-models-offline.tar.gz"
+PACKAGE_NAME="paddleocr-models.tar.gz"
 
 echo "=========================================="
-echo "PaddleOCR 离线部署准备工具"
+echo "PaddleOCR 部署准备工具"
 echo "=========================================="
 echo ""
 
@@ -46,22 +46,24 @@ fi
 # 显示后续步骤
 echo ""
 echo "=========================================="
-echo "✓ 离线部署准备完成！"
+echo "✓ 部署准备完成！"
 echo "=========================================="
 echo ""
 echo "后续步骤："
 echo ""
 echo "方案一：构建包含模型的 Docker 镜像"
-echo "  1. 使用 Dockerfile.offline 构建镜像："
-echo "     docker build -f Dockerfile.offline -t money-ocr-api:offline ."
+echo "  1. 使用构建脚本："
+echo "     bash scripts/build_image.sh"
+echo "  2. 或手动构建："
+echo "     docker build --build-arg OFFLINE_BUILD=true -t money-ocr-api:1.0.0 ."
 echo ""
 echo "方案二：使用卷挂载（推荐用于开发环境）"
 echo "  1. 将 ${PACKAGE_NAME} 复制到离线环境"
 echo "  2. 解压: mkdir -p models && tar -xzf ${PACKAGE_NAME} -C models"
-echo "  3. 使用 docker-compose.offline.yml 启动："
-echo "     docker-compose -f docker-compose.offline.yml up -d"
+echo "  3. 启动容器时挂载模型目录："
+echo "     docker run -d -p 8000:8000 -v \$(pwd)/models:/root/.paddlex/official_models:ro money-ocr-api:1.0.0"
 echo ""
 echo "方案三：手动复制模型目录"
 echo "  1. 将 ./models 目录复制到离线环境"
-echo "  2. 在 Docker 容器中挂载或复制到 /root/.paddleocr/"
+echo "  2. 在 Docker 容器中挂载或复制到 /root/.paddlex/official_models/"
 echo ""

@@ -1,5 +1,5 @@
 #!/bin/bash
-# 构建离线 Docker 镜像脚本
+# 构建 Docker 镜像脚本
 #
 # 此脚本会：
 # 1. 检查模型文件是否存在
@@ -12,11 +12,11 @@ SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 PROJECT_ROOT="$(dirname "$SCRIPT_DIR")"
 MODEL_DIR="${PROJECT_ROOT}/models"
 IMAGE_NAME="money-ocr-api"
-IMAGE_TAG="offline"
-EXPORT_TAR="money-ocr-api-offline.tar"
+IMAGE_TAG="1.0.0"
+EXPORT_TAR="money-ocr-api.tar"
 
 echo "=========================================="
-echo "PaddleOCR 离线镜像构建工具"
+echo "PaddleOCR 镜像构建工具"
 echo "=========================================="
 echo ""
 
@@ -25,7 +25,7 @@ if [ ! -d "${MODEL_DIR}" ]; then
     echo "错误：模型目录不存在: ${MODEL_DIR}"
     echo ""
     echo "请先运行以下命令下载模型："
-    echo "  bash scripts/prepare_offline_deployment.sh"
+    echo "  bash scripts/prepare_deployment.sh"
     exit 1
 fi
 
@@ -35,7 +35,7 @@ if [ "${MODEL_COUNT}" -eq 0 ]; then
     echo "错误：模型目录为空: ${MODEL_DIR}"
     echo ""
     echo "请先运行以下命令下载模型："
-    echo "  bash scripts/prepare_offline_deployment.sh"
+    echo "  bash scripts/prepare_deployment.sh"
     exit 1
 fi
 
@@ -50,7 +50,8 @@ echo ""
 # 构建镜像
 echo "开始构建 Docker 镜像..."
 echo "  镜像名称: ${IMAGE_NAME}:${IMAGE_TAG}"
-echo "  Dockerfile: Dockerfile.offline"
+echo "  Dockerfile: Dockerfile"
+echo "  构建模式: 包含预下载模型（OFFLINE_BUILD=true）"
 echo ""
 
 cd "${PROJECT_ROOT}"
@@ -66,8 +67,8 @@ if [ -f .dockerignore ]; then
     fi
 fi
 
-# 构建镜像
-docker build -f Dockerfile.offline -t "${IMAGE_NAME}:${IMAGE_TAG}" .
+# 构建镜像（启用离线模式，将模型打包到镜像中）
+docker build --build-arg OFFLINE_BUILD=true -t "${IMAGE_NAME}:${IMAGE_TAG}" .
 
 BUILD_STATUS=$?
 
@@ -116,7 +117,7 @@ fi
 
 echo ""
 echo "=========================================="
-echo "✓ 离线镜像构建完成！"
+echo "✓ 镜像构建完成！"
 echo "=========================================="
 echo ""
 echo "后续步骤："
@@ -125,12 +126,12 @@ echo "1. 测试镜像："
 echo "   docker run -p 8000:8000 ${IMAGE_NAME}:${IMAGE_TAG}"
 echo ""
 echo "2. 使用 docker-compose 启动："
-echo "   docker-compose -f docker-compose.offline.yml up -d"
+echo "   docker-compose up -d"
 echo ""
 echo "3. 部署到离线环境："
 echo "   a. 导出镜像: docker save ${IMAGE_NAME}:${IMAGE_TAG} -o ${EXPORT_TAR}"
 echo "   b. 复制到离线服务器"
 echo "   c. 加载镜像: docker load -i ${EXPORT_TAR}"
-echo "   d. 启动容器: docker-compose -f docker-compose.offline.yml up -d"
+echo "   d. 启动容器: docker run -d --name money-ocr -p 8000:8000 ${IMAGE_NAME}:${IMAGE_TAG}"
 echo ""
 

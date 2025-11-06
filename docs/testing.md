@@ -335,7 +335,7 @@ def test_with_fixture(ocr_service, sample_image):
 python scripts/download_models.py --model-dir ~/.paddleocr
 
 # 或使用准备脚本
-bash scripts/prepare_offline_deployment.sh
+bash scripts/prepare_deployment.sh
 ```
 
 #### 方案 3: 使用 Mock（CI/CD 环境）

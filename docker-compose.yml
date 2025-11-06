@@ -8,11 +8,9 @@ version: '3.8'
 #     docker-compose up -d
 #
 #   离线模式（预装模型）：
-#     1. 准备模型：bash scripts/prepare_offline_deployment.sh
-#     2. 使用离线配置：docker-compose -f docker-compose.yml -f docker-compose.override.offline.yml up -d
-#
-#   或直接构建离线镜像：
-#     docker-compose build --build-arg OFFLINE_BUILD=true
+#     1. 准备模型：bash scripts/prepare_deployment.sh
+#     2. 构建镜像：docker-compose build --build-arg OFFLINE_BUILD=true
+#     3. 启动服务：docker-compose up -d
 
 services:
   money-ocr:

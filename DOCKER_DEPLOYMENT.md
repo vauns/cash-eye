@@ -25,20 +25,23 @@ docker-compose up -d
 
 ```bash
 # 1. 在有网络的环境准备模型
-bash scripts/prepare_offline_deployment.sh
+bash scripts/prepare_deployment.sh
 
 # 2. 构建包含模型的镜像
-docker build --build-arg OFFLINE_BUILD=true -t money-ocr-api:offline .
+bash scripts/build_image.sh
+
+# 或手动构建
+docker build --build-arg OFFLINE_BUILD=true -t money-ocr-api:1.0.0 .
 
 # 或使用 docker-compose
 OFFLINE_BUILD=true docker-compose up -d --build
 
 # 3. 导出镜像（可选，用于传输）
-docker save money-ocr-api:offline -o money-ocr-api-offline.tar
+docker save money-ocr-api:1.0.0 -o money-ocr-api.tar
 
 # 4. 在离线环境加载并运行
-docker load -i money-ocr-api-offline.tar
-docker run -d --name money-ocr -p 8000:8000 money-ocr-api:offline
+docker load -i money-ocr-api.tar
+docker run -d --name money-ocr -p 8000:8000 money-ocr-api:1.0.0
 ```
 
 #### 方式2：卷挂载模型

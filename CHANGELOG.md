@@ -67,7 +67,7 @@
 ### 新增
 - 🚀 离线部署支持
 - 📦 模型打包脚本
-- 🐳 Dockerfile.offline
+- 🐳 Docker 离线构建支持（已合并到主 Dockerfile）
 - 📝 离线部署文档
 
 ### 改进

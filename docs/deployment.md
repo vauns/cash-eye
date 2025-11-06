@@ -162,37 +162,40 @@ PaddleOCR 首次运行时需要下载以下模型（约 150MB）：
 
 ```bash
 # 使用自动化脚本
-bash scripts/prepare_offline_deployment.sh
+bash scripts/prepare_deployment.sh
 ```
 
-#### 步骤 2：构建离线镜像
+#### 步骤 2：构建镜像
 
 ```bash
-# 使用构建参数
-docker build --build-arg OFFLINE_BUILD=true -t money-ocr-api:offline .
+# 使用构建脚本
+bash scripts/build_image.sh
+
+# 或手动构建
+docker build --build-arg OFFLINE_BUILD=true -t money-ocr-api:1.0.0 .
 
 # 导出镜像（用于传输）
-docker save money-ocr-api:offline -o money-ocr-api-offline.tar
+docker save money-ocr-api:1.0.0 -o money-ocr-api.tar
 
 # 检查镜像大小
-ls -lh money-ocr-api-offline.tar
+ls -lh money-ocr-api.tar
 ```
 
 #### 步骤 3：部署到离线环境
 
 ```bash
 # 1. 传输镜像文件到离线服务器
-scp money-ocr-api-offline.tar user@offline-server:/path/to/
+scp money-ocr-api.tar user@offline-server:/path/to/
 
 # 2. 加载镜像
-docker load -i money-ocr-api-offline.tar
+docker load -i money-ocr-api.tar
 
 # 3. 启动服务
 docker run -d \
   --name money-ocr \
   -p 8000:8000 \
   --restart unless-stopped \
-  money-ocr-api:offline
+  money-ocr-api:1.0.0
 
 # 4. 验证
 curl http://localhost:8000/api/v1/health

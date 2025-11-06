@@ -37,10 +37,10 @@ COPY main.py .
 ARG OFFLINE_BUILD=false
 
 # 【离线部署】如果 OFFLINE_BUILD=true，复制预下载的模型文件
-# 使用方法：docker build --build-arg OFFLINE_BUILD=true -t money-ocr-api:offline .
+# 使用方法：docker build --build-arg OFFLINE_BUILD=true -t money-ocr-api:1.0.0 .
 #
 # 准备模型的方法：
-#   方法1: bash scripts/prepare_offline_deployment.sh
+#   方法1: bash scripts/prepare_deployment.sh
 #   方法2: python scripts/download_models.py --model-dir ./models
 COPY models/ /tmp/models/ 2>/dev/null || true
 RUN if [ "$OFFLINE_BUILD" = "true" ] && [ -d "/tmp/models" ]; then \

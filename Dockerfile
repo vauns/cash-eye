@@ -1,5 +1,5 @@
 # 多阶段构建 - 优化镜像大小
-FROM python:3.10-slim as builder
+FROM python:3.10-slim AS builder
 
 WORKDIR /app
 
@@ -15,13 +15,14 @@ FROM python:3.10-slim
 WORKDIR /app
 
 # 安装PaddleOCR依赖的系统库
+# 注意: Debian 12+ 中 libgl1-mesa-glx 已被 libgl1 取代
 RUN apt-get update && apt-get install -y \
     libgomp1 \
     libglib2.0-0 \
     libsm6 \
     libxext6 \
     libxrender-dev \
-    libgl1-mesa-glx \
+    libgl1 \
     && rm -rf /var/lib/apt/lists/*
 
 # 从builder阶段复制Python包

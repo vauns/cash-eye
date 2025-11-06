@@ -5,7 +5,7 @@
 ## 系统要求
 
 - Windows 10/11
-- Python 3.9+
+- Python 3.10+
 - Docker Desktop for Windows（用于构建镜像）
 - PowerShell 或 命令提示符
 

@@ -156,7 +156,7 @@ print(f"失败: {result['data']['failed']}")
 
 ## 技术栈
 
-- Python 3.9+
+- Python 3.10+
 - FastAPI
 - PaddleOCR 3.3.1 (PP-OCRv5)
 - Pillow

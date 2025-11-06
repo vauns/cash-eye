@@ -1,5 +1,5 @@
 # 多阶段构建 - 优化镜像大小
-FROM python:3.9-slim as builder
+FROM python:3.10-slim as builder
 
 WORKDIR /app
 
@@ -10,7 +10,7 @@ COPY requirements.txt .
 RUN pip install --no-cache-dir --user -r requirements.txt
 
 # 最终运行镜像
-FROM python:3.9-slim
+FROM python:3.10-slim
 
 WORKDIR /app
 

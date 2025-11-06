@@ -4,24 +4,11 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="ee18abcd-b2ed-499f-ae4c-fcdaf5722a2f" name="Changes" comment="init">
+    <list default="true" id="ee18abcd-b2ed-499f-ae4c-fcdaf5722a2f" name="Changes" comment="feat: Enhance OCR functionality with system-specific font loading and improve error handling in recognition process">
+      <change afterPath="$PROJECT_DIR$/test_cpu_detection.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/requirements.txt" beforeDir="false" afterPath="$PROJECT_DIR$/requirements.txt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/services/ocr_service.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/services/ocr_service.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests/fixtures/generate_test_images.py" beforeDir="false" afterPath="$PROJECT_DIR$/tests/fixtures/generate_test_images.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests/fixtures/images/amount_0_01.jpg" beforeDir="false" afterPath="$PROJECT_DIR$/tests/fixtures/images/amount_0_01.jpg" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests/fixtures/images/amount_100.jpg" beforeDir="false" afterPath="$PROJECT_DIR$/tests/fixtures/images/amount_100.jpg" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests/fixtures/images/amount_1234.jpg" beforeDir="false" afterPath="$PROJECT_DIR$/tests/fixtures/images/amount_1234.jpg" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests/fixtures/images/amount_200.png" beforeDir="false" afterPath="$PROJECT_DIR$/tests/fixtures/images/amount_200.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests/fixtures/images/amount_300.bmp" beforeDir="false" afterPath="$PROJECT_DIR$/tests/fixtures/images/amount_300.bmp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests/fixtures/images/amount_50.jpg" beforeDir="false" afterPath="$PROJECT_DIR$/tests/fixtures/images/amount_50.jpg" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests/fixtures/images/amount_blurry.jpg" beforeDir="false" afterPath="$PROJECT_DIR$/tests/fixtures/images/amount_blurry.jpg" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests/fixtures/images/amount_comma_1234.jpg" beforeDir="false" afterPath="$PROJECT_DIR$/tests/fixtures/images/amount_comma_1234.jpg" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests/fixtures/images/amount_dollar_99.jpg" beforeDir="false" afterPath="$PROJECT_DIR$/tests/fixtures/images/amount_dollar_99.jpg" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests/fixtures/images/amount_large.jpg" beforeDir="false" afterPath="$PROJECT_DIR$/tests/fixtures/images/amount_large.jpg" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests/fixtures/images/amount_yuan_888.jpg" beforeDir="false" afterPath="$PROJECT_DIR$/tests/fixtures/images/amount_yuan_888.jpg" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests/integration/test_api.py" beforeDir="false" afterPath="$PROJECT_DIR$/tests/integration/test_api.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests/unit/test_ocr_service.py" beforeDir="false" afterPath="$PROJECT_DIR$/tests/unit/test_ocr_service.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -179,7 +166,15 @@
       <option name="project" value="LOCAL" />
       <updated>1762336061170</updated>
     </task>
-    <option name="localTasksCounter" value="2" />
+    <task id="LOCAL-00002" summary="feat: Enhance OCR functionality with system-specific font loading and improve error handling in recognition process">
+      <option name="closed" value="true" />
+      <created>1762405762977</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1762405762977</updated>
+    </task>
+    <option name="localTasksCounter" value="3" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -195,6 +190,7 @@
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="init" />
-    <option name="LAST_COMMIT_MESSAGE" value="init" />
+    <MESSAGE value="feat: Enhance OCR functionality with system-specific font loading and improve error handling in recognition process" />
+    <option name="LAST_COMMIT_MESSAGE" value="feat: Enhance OCR functionality with system-specific font loading and improve error handling in recognition process" />
   </component>
 </project>

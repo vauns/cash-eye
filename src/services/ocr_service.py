@@ -2,8 +2,10 @@
 import re
 import time
 import signal
+import platform
 from typing import Optional, Tuple, List
 import numpy as np
+import psutil
 from PIL import Image
 from paddleocr import PaddleOCR
 
@@ -32,6 +34,27 @@ class OCRService:
         logger.info("ocr_engine_initializing", engine="PaddleOCR", version="3.3.1")
 
         try:
+            # 检测CPU信息
+            cpu_processor = platform.processor()
+            cpu_info = cpu_processor.lower()
+            is_intel_cpu = 'intel' in cpu_info
+
+            # 获取CPU核心/线程数
+            physical_cores = psutil.cpu_count(logical=False) or 1
+            logical_threads = psutil.cpu_count(logical=True) or 1
+            optimal_threads = max(1, logical_threads // 2)  # 使用一半逻辑线程
+
+            # 详细日志输出
+            logger.info(
+                "cpu_detection",
+                processor=cpu_processor,
+                is_intel=is_intel_cpu,
+                physical_cores=physical_cores,
+                logical_threads=logical_threads,
+                optimal_threads=optimal_threads,
+                mkldnn_enabled=is_intel_cpu
+            )
+
             # PaddleOCR 3.3.1 配置
             # 混合模型策略：检测用 Mobile（快），识别用 Server（准）
             # 平衡性能和精度，能正确识别货币符号"¥"
@@ -48,9 +71,9 @@ class OCRService:
                 # 识别批处理
                 text_recognition_batch_size=1,
 
-                # CPU 优化
-                enable_mkldnn=True,                     # Intel MKL-DNN 加速
-                cpu_threads=10,                         # 多线程优化（利用 6P+8E）
+                # CPU 自适应优化
+                enable_mkldnn=is_intel_cpu,         # 仅Intel CPU启用MKL-DNN加速
+                cpu_threads=optimal_threads,        # 使用一半逻辑线程避免过载
             )
             logger.info("ocr_engine_initialized", status="success", mode="full_pipeline", model="mobile_det+server_rec")
         except Exception as e:

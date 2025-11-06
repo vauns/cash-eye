@@ -1,0 +1,69 @@
+version: '3.8'
+
+# Cash Eye 金额识别服务 - Docker Compose 配置
+#
+# 使用方法：
+#
+#   在线模式（默认）：
+#     docker-compose up -d
+#
+#   离线模式（预装模型）：
+#     1. 准备模型：bash scripts/prepare_deployment.sh
+#     2. 构建镜像：docker-compose build --build-arg OFFLINE_BUILD=true
+#     3. 启动服务：docker-compose up -d
+
+services:
+  money-ocr:
+    image: money-ocr-api:1.0.0
+    container_name: money-ocr
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        # 设置为 true 以构建包含模型的离线镜像
+        OFFLINE_BUILD: ${OFFLINE_BUILD:-false}
+    ports:
+      - "${PORT:-8000}:8000"
+    environment:
+      - PORT=8000
+      - LOG_LEVEL=${LOG_LEVEL:-INFO}
+      - MAX_FILE_SIZE_MB=${MAX_FILE_SIZE_MB:-10}
+      - REQUEST_TIMEOUT_SEC=${REQUEST_TIMEOUT_SEC:-30}
+      - OCR_TIMEOUT_SEC=${OCR_TIMEOUT_SEC:-3}
+    # 【可选】离线模式 - 通过卷挂载提供模型
+    # 如果不想将模型打包到镜像中，可以取消下面的注释
+    # volumes:
+    #   - ./models:/root/.paddlex/official_models:ro
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/api/v1/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+    deploy:
+      resources:
+        limits:
+          cpus: '${CPU_LIMIT:-2.0}'
+          memory: ${MEMORY_LIMIT:-2G}
+        reservations:
+          cpus: '${CPU_RESERVATION:-1.0}'
+          memory: ${MEMORY_RESERVATION:-1G}
+
+# 使用示例：
+#
+# 1. 在线模式（默认）：
+#    docker-compose up -d
+#
+# 2. 离线模式（构建时打包模型）：
+#    OFFLINE_BUILD=true docker-compose up -d --build
+#
+# 3. 离线模式（卷挂载）：
+#    取消上方 volumes 注释，然后：
+#    docker-compose up -d
+#
+# 4. 自定义资源限制：
+#    CPU_LIMIT=4.0 MEMORY_LIMIT=4G docker-compose up -d
+#
+# 5. 开发模式（调试日志）：
+#    LOG_LEVEL=DEBUG docker-compose up -d

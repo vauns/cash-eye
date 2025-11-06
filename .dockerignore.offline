@@ -1,0 +1,58 @@
+# 离线部署 Docker 构建忽略文件
+#
+# 使用方法：
+#   在构建离线镜像前，临时替换 .dockerignore：
+#   cp .dockerignore .dockerignore.backup
+#   cp .dockerignore.offline .dockerignore
+#   docker build -f Dockerfile.offline -t money-ocr-api:offline .
+#   mv .dockerignore.backup .dockerignore
+#
+# 或使用构建脚本自动处理
+
+# 测试文件
+tests/
+.pytest_cache/
+
+# Git文件
+.git/
+.gitignore
+
+# 文档
+*.md
+docs/
+specs/
+
+# Python缓存
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+*.so
+*.egg
+*.egg-info/
+dist/
+build/
+
+# 虚拟环境
+.venv/
+venv/
+ENV/
+
+# IDE配置
+.idea/
+.vscode/
+.DS_Store
+
+# 日志
+*.log
+
+# 环境变量
+.env
+
+# 开发依赖
+requirements-dev.txt
+
+# 注意：与标准 .dockerignore 的区别
+# 离线构建时 models/ 目录不应被忽略，因为需要将预下载的模型打包到镜像中
+# 如果 .dockerignore 中包含 models/，请在离线构建时移除该行

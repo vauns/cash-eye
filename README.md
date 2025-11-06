@@ -26,6 +26,8 @@ docker run -d --name money-ocr -p 8000:8000 money-ocr-api:1.0.0
 curl http://localhost:8000/api/v1/health
 ```
 
+**离线/内网部署：** 如需在无网络环境部署，请参考 [离线部署指南](./OFFLINE_DEPLOYMENT.md)
+
 ### 本地开发
 
 ```bash

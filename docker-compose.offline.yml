@@ -1,0 +1,68 @@
+version: '3.8'
+
+# 离线部署 Docker Compose 配置
+#
+# 使用场景：
+#   1. 使用预构建的离线镜像（包含模型文件）
+#   2. 或通过卷挂载方式加载本地模型文件
+#
+# 启动命令：
+#   docker-compose -f docker-compose.offline.yml up -d
+
+services:
+  money-ocr:
+    image: money-ocr-api:offline
+    container_name: money-ocr-offline
+    build:
+      context: .
+      dockerfile: Dockerfile.offline
+    ports:
+      - "8000:8000"
+    environment:
+      - PORT=8000
+      - LOG_LEVEL=INFO
+      - MAX_FILE_SIZE_MB=10
+      - REQUEST_TIMEOUT_SEC=30
+      # 离线部署：指定模型缓存目录
+      - HUB_HOME=/root/.paddleocr
+    # 【可选】如果使用卷挂载方式加载模型（而非打包到镜像中）
+    # 取消下面的注释，并确保 ./models 目录包含预下载的模型文件
+    # volumes:
+    #   - ./models:/root/.paddleocr:ro
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/api/v1/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+    deploy:
+      resources:
+        limits:
+          cpus: '2.0'
+          memory: 2G
+        reservations:
+          cpus: '1.0'
+          memory: 1G
+
+# 使用说明：
+#
+# 方案一：使用包含模型的镜像（推荐用于生产环境）
+#   1. 在有网络的环境准备模型：
+#      bash scripts/prepare_offline_deployment.sh
+#   2. 构建离线镜像：
+#      docker build -f Dockerfile.offline -t money-ocr-api:offline .
+#   3. 导出镜像：
+#      docker save money-ocr-api:offline -o money-ocr-api-offline.tar
+#   4. 在离线环境加载镜像：
+#      docker load -i money-ocr-api-offline.tar
+#   5. 启动服务：
+#      docker-compose -f docker-compose.offline.yml up -d
+#
+# 方案二：使用卷挂载（推荐用于开发环境）
+#   1. 在有网络的环境下载模型：
+#      python scripts/download_models.py --model-dir ./models
+#   2. 将 ./models 目录复制到离线环境
+#   3. 取消上方 volumes 配置的注释
+#   4. 启动服务：
+#      docker-compose -f docker-compose.offline.yml up -d

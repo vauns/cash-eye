@@ -18,13 +18,15 @@
 |---------|---------|------|-------|
 | Docker | 开发/测试/生产 | ⭐ | ⭐⭐⭐⭐⭐ |
 | Docker Compose | 多服务编排 | ⭐⭐ | ⭐⭐⭐⭐ |
-| 离线部署 | 内网/无网环境 | ⭐⭐⭐ | ⭐⭐⭐⭐ |
+| 离线部署 | 内网/无网环境 | ⭐⭐ | ⭐⭐⭐⭐ |
 | Kubernetes | 大规模集群 | ⭐⭐⭐⭐ | ⭐⭐⭐ |
 | 本地运行 | 开发调试 | ⭐ | ⭐⭐⭐ |
 
 ## Docker 部署
 
-### 基础部署
+### 在线模式（默认）
+
+适用于有网络连接的环境。
 
 ```bash
 # 1. 构建镜像
@@ -51,16 +53,6 @@ docker run -d \
   -e OCR_TIMEOUT_SEC=3 \
   -e REQUEST_TIMEOUT_SEC=30 \
   --restart unless-stopped \
-  money-ocr-api:1.0.0
-```
-
-### 挂载日志目录
-
-```bash
-docker run -d \
-  --name money-ocr \
-  -p 8000:8000 \
-  -v /var/log/money-ocr:/app/logs \
   money-ocr-api:1.0.0
 ```
 
@@ -153,47 +145,37 @@ PaddleOCR 首次运行时需要下载以下模型（约 150MB）：
 - **PP-OCRv5_mobile_det**: 文本检测模型 (~120MB)
 - **PP-OCRv5_mobile_rec**: 文本识别模型 (~30MB)
 
-模型默认缓存在 `~/.paddleocr/`
+模型默认缓存在 `~/.paddlex/official_models/`
 
-### 方案对比
+### 方式对比
 
-| 方案 | 适用场景 | 优点 | 缺点 |
+| 方式 | 适用场景 | 优点 | 缺点 |
 |-----|---------|------|------|
-| 方案一：镜像打包 | 生产环境 | 一次构建，处处运行；镜像自包含 | 镜像体积较大 (~1GB) |
-| 方案二：卷挂载 | 开发/测试环境 | 灵活，易于更新模型 | 需要维护模型目录 |
-| 方案三：手动配置 | 特殊需求 | 完全可控 | 操作步骤较多 |
+| 方式1：镜像打包 | 生产环境 | 一次构建，处处运行 | 镜像体积较大 (~1GB) |
+| 方式2：卷挂载 | 开发/测试环境 | 灵活，易于更新 | 需要维护模型目录 |
 
-### 方案一：镜像打包方式（推荐）
+### 方式1：镜像打包（推荐）
 
 将模型打包到 Docker 镜像中。
 
-#### 步骤 1：准备环境（联网环境）
+#### 步骤 1：准备模型（联网环境）
 
 ```bash
-# 下载模型并打包
+# 使用自动化脚本
 bash scripts/prepare_offline_deployment.sh
-```
-
-脚本会：
-- 下载模型到 `./models` 目录
-- 打包为 `paddleocr-models-offline.tar.gz`
-
-或手动下载：
-```bash
-python scripts/download_models.py --model-dir ./models
 ```
 
 #### 步骤 2：构建离线镜像
 
 ```bash
-# 使用自动化脚本
-bash scripts/build_offline_image.sh
+# 使用构建参数
+docker build --build-arg OFFLINE_BUILD=true -t money-ocr-api:offline .
 
-# 或手动构建
-docker build -f Dockerfile.offline -t money-ocr-api:offline .
-
-# 导出镜像
+# 导出镜像（用于传输）
 docker save money-ocr-api:offline -o money-ocr-api-offline.tar
+
+# 检查镜像大小
+ls -lh money-ocr-api-offline.tar
 ```
 
 #### 步骤 3：部署到离线环境
@@ -209,7 +191,6 @@ docker load -i money-ocr-api-offline.tar
 docker run -d \
   --name money-ocr \
   -p 8000:8000 \
-  -e LOG_LEVEL=INFO \
   --restart unless-stopped \
   money-ocr-api:offline
 
@@ -217,7 +198,7 @@ docker run -d \
 curl http://localhost:8000/api/v1/health
 ```
 
-### 方案二：卷挂载方式
+### 方式2：卷挂载
 
 通过卷挂载提供模型文件。
 
@@ -227,7 +208,7 @@ curl http://localhost:8000/api/v1/health
 python scripts/download_models.py --model-dir ./models
 ```
 
-#### 步骤 2：传输模型目录
+#### 步骤 2：传输模型
 
 ```bash
 # 打包
@@ -246,99 +227,13 @@ tar -xzf models.tar.gz
 docker run -d \
   --name money-ocr \
   -p 8000:8000 \
-  -v $(pwd)/models:/root/.paddleocr:ro \
+  -v $(pwd)/models:/root/.paddlex/official_models:ro \
   money-ocr-api:1.0.0
-```
-
-### 方案三：手动配置
-
-```bash
-# 1. 下载模型到自定义位置
-python scripts/download_models.py --model-dir /opt/paddleocr-models
-
-# 2. 运行容器时挂载
-docker run -d \
-  --name money-ocr \
-  -p 8000:8000 \
-  -v /opt/paddleocr-models:/root/.paddleocr:ro \
-  -e HUB_HOME=/root/.paddleocr \
-  money-ocr-api:1.0.0
-```
-
-### 验证模型加载
-
-```bash
-# 查看容器日志
-docker logs money-ocr 2>&1 | grep -i "model"
-```
-
-成功加载会显示：
-```
-INFO - Text detection model loaded
-INFO - Text recognition model loaded
 ```
 
 ## Docker Compose 部署
 
-### 基础配置
-
-创建 `docker-compose.yml`：
-
-```yaml
-version: '3.8'
-
-services:
-  money-ocr:
-    image: money-ocr-api:1.0.0
-    container_name: money-ocr
-    ports:
-      - "8000:8000"
-    environment:
-      - LOG_LEVEL=INFO
-      - MAX_FILE_SIZE_MB=10
-      - OCR_TIMEOUT_SEC=3
-      - REQUEST_TIMEOUT_SEC=30
-    restart: unless-stopped
-    healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:8000/api/v1/health"]
-      interval: 30s
-      timeout: 10s
-      retries: 3
-    deploy:
-      resources:
-        limits:
-          cpus: '2.0'
-          memory: 2G
-        reservations:
-          cpus: '1.0'
-          memory: 1G
-```
-
-### 离线部署配置
-
-创建 `docker-compose.offline.yml`：
-
-```yaml
-version: '3.8'
-
-services:
-  money-ocr:
-    image: money-ocr-api:offline
-    container_name: money-ocr-offline
-    ports:
-      - "8000:8000"
-    volumes:
-      # 可选：挂载模型目录
-      # - ./models:/root/.paddleocr:ro
-      # 可选：挂载日志目录
-      # - ./logs:/app/logs
-    environment:
-      - LOG_LEVEL=INFO
-      - HUB_HOME=/root/.paddleocr
-    restart: unless-stopped
-```
-
-### 使用
+### 在线部署
 
 ```bash
 # 启动服务
@@ -349,9 +244,32 @@ docker-compose logs -f
 
 # 停止服务
 docker-compose down
+```
 
-# 重启服务
-docker-compose restart
+### 离线部署
+
+```bash
+# 方式1：构建时打包模型
+OFFLINE_BUILD=true docker-compose up -d --build
+
+# 方式2：使用卷挂载
+# 在 docker-compose.yml 中取消 volumes 配置的注释后：
+docker-compose up -d
+```
+
+### 自定义配置
+
+使用环境变量自定义配置：
+
+```bash
+# 设置日志级别
+LOG_LEVEL=DEBUG docker-compose up -d
+
+# 设置资源限制
+CPU_LIMIT=4.0 MEMORY_LIMIT=4G docker-compose up -d
+
+# 组合多个配置
+LOG_LEVEL=DEBUG CPU_LIMIT=4.0 docker-compose up -d
 ```
 
 ## Kubernetes 部署
@@ -454,7 +372,6 @@ kubectl logs -f deployment/money-ocr
 | MAX_FILE_SIZE_MB | 最大文件大小(MB) | 10 | 20 |
 | OCR_TIMEOUT_SEC | OCR 超时(秒) | 3 | 5 |
 | REQUEST_TIMEOUT_SEC | 请求超时(秒) | 30 | 60 |
-| HUB_HOME | 模型缓存目录 | ~/.paddleocr | /opt/models |
 
 ### 配置示例
 
@@ -533,7 +450,7 @@ docker exec -it money-ocr bash
 
 ```bash
 # 检查模型目录
-docker exec money-ocr ls -la /root/.paddleocr/
+docker exec money-ocr ls -la /root/.paddlex/
 
 # 查看模型加载日志
 docker logs money-ocr 2>&1 | grep -i "model"
@@ -587,6 +504,12 @@ docker load -i backup.tar
 3. **认证**: 添加 API 认证机制
 4. **资源限制**: 设置合理的资源限制
 5. **日志审计**: 记录所有 API 访问日志
+
+## 相关文档
+
+- [DOCKER_DEPLOYMENT.md](../DOCKER_DEPLOYMENT.md) - Docker 部署快速参考
+- [性能优化](./performance.md) - 性能调优指南
+- [问题排查](./troubleshooting.md) - 故障排查手册
 
 ---
 

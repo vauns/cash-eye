@@ -1,3 +1,25 @@
+# ⚠️ 已弃用 (DEPRECATED) ⚠️
+#
+# 此文件已被合并到主 Dockerfile 中。
+# 请使用以下方式构建离线镜像：
+#
+#   docker build --build-arg OFFLINE_BUILD=true -t money-ocr-api:offline .
+#
+# 或使用 docker-compose：
+#
+#   OFFLINE_BUILD=true docker-compose up -d --build
+#
+# 详细说明请参考：
+#   - README.md
+#   - DOCKER_DEPLOYMENT.md  
+#   - docs/deployment.md
+#
+# 此文件将在未来版本中移除。
+#
+# ---
+#
+# 以下为原始内容（仅供参考）：
+
 # 离线部署 Dockerfile
 # 此 Dockerfile 会将预下载的模型文件打包到镜像中，适用于无网络环境部署
 #

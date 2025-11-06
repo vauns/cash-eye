@@ -44,9 +44,9 @@ def download_models(model_dir: str = None):
         logger.info("=" * 60)
 
         # 初始化文本检测模型（会自动下载）
+        # 注意：PaddleOCR 会在控制台输出下载进度
         detector = TextDetection(
-            model_name='PP-OCRv5_mobile_det',
-            show_log=True
+            model_name='PP-OCRv5_mobile_det'
         )
         logger.info("✓ 检测模型下载完成")
 
@@ -55,9 +55,9 @@ def download_models(model_dir: str = None):
         logger.info("=" * 60)
 
         # 初始化文本识别模型（会自动下载）
+        # 注意：PaddleOCR 会在控制台输出下载进度
         recognizer = TextRecognition(
-            model_name='PP-OCRv5_mobile_rec',
-            show_log=True
+            model_name='PP-OCRv5_mobile_rec'
         )
         logger.info("✓ 识别模型下载完成")
 
